@@ -3,6 +3,7 @@
     "target": "ESNext",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "noEmit": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -10,12 +11,9 @@
     "sourceMap": true,
     "allowJs": true,
     "paths": {
-      "@sap/cds": [
-        "./node_modules/@cap-js/cds-types"
-      ],
-      "#cds-models/*": [
-        "./@cds-models/*"
-      ]
+      "@sap/cds": ["./node_modules/@cap-js/cds-types"],
+      "#cds-models/*": ["./@cds-models/*"],
+      "#src/*": ["./*"]
     }
   }
 }
