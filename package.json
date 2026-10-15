@@ -1,13 +1,61 @@
 {
+  "workspaces": [
+    "app/spacefarers"
+  ],
+  "scripts": {
+    "start": "CDS_TYPESCRIPT=true node --import tsx node_modules/@sap/cds/bin/serve.js",
+    "dev": "CDS_TYPESCRIPT=true NODE_OPTIONS='--import tsx' cds watch",
+    "deploy:local": "cds deploy --to sqlite:spacefarer.sqlite",
+    "test": "node --import tsx --test test/*.test.cjs",
+    "typecheck": "tsc --noEmit",
+    "dev:ui": "npm start --workspace galactic-spacefarers-ui",
+    "build:ui": "npm run build --workspace galactic-spacefarers-ui",
+    "typecheck:ui": "npm run typecheck --workspace galactic-spacefarers-ui"
+  },
+  "cds": {
+    "requires": {
+      "[development]": {
+        "db": {
+          "kind": "sqlite",
+          "credentials": {
+            "url": "spacefarer.sqlite"
+          }
+        },
+        "auth": {
+          "kind": "basic",
+          "users": {
+            "alice": {
+              "password": "alice-local",
+              "roles": []
+            },
+            "bob": {
+              "password": "bob-local",
+              "roles": []
+            }
+          }
+        }
+      }
+    }
+  },
   "devDependencies": {
-    "@cap-js/cds-types": "^0.18.0",
-    "@types/node": "^24.0.0",
-    "tsx": "^4",
-    "typescript": "^7.0.0",
     "@cap-js/cds-typer": ">=0.1",
-    "@cap-js/sqlite": "^3"
+    "@cap-js/cds-types": "^0.18.0",
+    "@sap/cds-dk": "^10.1.0",
+    "@types/node": "^24.0.0",
+    "@types/nodemailer": "^8.0.2",
+    "tsx": "^4",
+    "typescript": "^7.0.0"
   },
   "imports": {
+    "#src/*": "./*",
     "#cds-models/*": "./@cds-models/*/index.js"
+  },
+  "dependencies": {
+    "@cap-js/sqlite": "^3.1.2",
+    "@sap/cds": "^10.1.1",
+    "nodemailer": "^10.1.1"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

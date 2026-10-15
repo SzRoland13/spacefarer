@@ -2,3 +2,7 @@
 
 .idea/
 node_modules/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+app/spacefarers/dist/
