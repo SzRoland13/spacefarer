@@ -1,0 +1,28 @@
+<mvc:View
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  controllerName="galactic.spacefarers.controller.Startup"
+  displayBlock="true"
+  height="100%"
+>
+  <Page title="Galactic Spacefarer" showHeader="true" enableScrolling="false" showNavButton="{startup>/canGoBack}" navButtonPress=".onBack" busy="{startup>/busy}" busyIndicatorDelay="0">
+    <headerContent>
+      <Text text="{startup>/planetName}" />
+    </headerContent>
+    <content>
+      <VBox visible="{= !${startup>/ready} }" class="sapUiResponsiveMargin" width="auto">
+        <Title text="Choose your home planet" level="H1" />
+        <Text text="You will be able to access spacefarers from this planet. Your choice cannot be changed." class="sapUiSmallMarginTop sapUiSmallMarginBottom" />
+        <Label text="Planet" labelFor="planetSelect" />
+        <Select id="planetSelect" width="18rem" selectedKey="{startup>/selectedPlanet}" forceSelection="false" items="{startup>/planets}" enabled="{= !${startup>/busy} }">
+          <core:Item key="{startup>ID}" text="{startup>name}" />
+        </Select>
+        <Button text="Confirm planet" type="Emphasized" press=".onChoosePlanet" enabled="{= !!${startup>/selectedPlanet} &amp;&amp; !${startup>/busy} }" class="sapUiSmallMarginTop" />
+        <MessageStrip text="{startup>/error}" type="Error" showIcon="true" visible="{= !!${startup>/error} }" class="sapUiSmallMarginTop" />
+        <Button text="Retry" press=".onRetry" visible="{= !!${startup>/error} }" />
+      </VBox>
+      <core:ComponentContainer id="fiori" height="100%" lifecycle="Container" visible="{startup>/ready}" />
+    </content>
+  </Page>
+</mvc:View>

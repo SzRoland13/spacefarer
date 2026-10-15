@@ -1,0 +1,27 @@
+specVersion: "4.0"
+metadata:
+  name: galactic.spacefarers
+type: application
+framework:
+  name: SAPUI5
+  version: "1.136.23"
+  libraries:
+    - name: sap.ui.core
+    - name: sap.m
+    - name: sap.fe.templates
+    - name: sap.insights
+    - name: themelib_sap_horizon
+server:
+  customMiddleware:
+    - name: fiori-tools-proxy
+      afterMiddleware: compression
+      configuration:
+        backend:
+          - path: /odata
+            url: http://localhost:4004
+    - name: ui5-tooling-transpile-middleware
+      afterMiddleware: compression
+builder:
+  customTasks:
+    - name: ui5-tooling-transpile-task
+      afterTask: replaceVersion

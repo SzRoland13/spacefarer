@@ -1,0 +1,19 @@
+{
+  "name": "galactic-spacefarers-ui",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "fiori run --port 8080",
+    "build": "ui5 build --clean-dest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@sap/ux-ui5-tooling": "1.33.0",
+    "@sapui5/types": "1.136.23",
+    "@ui5/cli": "4.0.71",
+    "ui5-tooling-transpile": "3.13.1"
+  },
+  "ui5": {
+    "dependencies": ["ui5-tooling-transpile"]
+  }
+}

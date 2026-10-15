@@ -11,6 +11,37 @@ type SpacefarerAssignment = {
 export default class SpacefarerService extends cds.ApplicationService {
   init() {
     const { Spacefarers, Positions } = this.entities;
+    const Drafts = Spacefarers.drafts!;
+
+    this.before(["NEW", "PATCH"], Drafts, (req: Request) => {
+      const planetID = req.user.attr.planet;
+
+      if (!planetID) {
+        return req.reject(403, "Choose your planet before creating a spacefarer.");
+      }
+
+      if (
+        Object.hasOwn(req.data, "planet_ID") &&
+        req.data.planet_ID !== planetID
+      ) {
+        return req.reject(403, "Spacefarers must belong to your chosen planet.");
+      }
+
+      if (
+        ["planet", "department", "position"].some((field) =>
+          Object.hasOwn(req.data, field),
+        )
+      ) {
+        return req.reject(
+          400,
+          "Use the lookup _ID fields when editing a spacefarer.",
+        );
+      }
+
+      if (req.event === "NEW") {
+        req.data.planet_ID = planetID;
+      }
+    });
 
     this.before("READ", "*", async (req: Request) => {
       const path = req.subject?.ref;
@@ -22,7 +53,10 @@ export default class SpacefarerService extends cds.ApplicationService {
       const parent = path[0];
       const parentName = typeof parent === "string" ? parent : parent.id;
 
-      if (parentName !== Spacefarers.name) {
+      if (
+        parentName !== Spacefarers.name &&
+        parentName !== Drafts.name
+      ) {
         return;
       }
 
@@ -46,6 +80,16 @@ export default class SpacefarerService extends cds.ApplicationService {
 
       if (!spacefarer) {
         return req.reject(404, "Not Found");
+      }
+
+      if (parentName === Drafts.name) {
+        const ownDraft = await this.run(
+          SELECT.one.from({ ref: [parent] }).columns("ID"),
+        );
+
+        if (!ownDraft) {
+          return req.reject(404, "Not Found");
+        }
       }
     });
 

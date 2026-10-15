@@ -1,4 +1,5 @@
 {
+  "exclude": ["node_modules", "app/spacefarers"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
