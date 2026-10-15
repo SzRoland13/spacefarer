@@ -23,9 +23,11 @@ npm run dev:ui
 
 Open `http://localhost:8080/index.html`. `npm run build:ui` builds the frontend.
 
-The database is saved in `spacefarer.sqlite`. The initial data includes two planets,
-departments, and a position. Running `npm run deploy:local` recreates the tables,
-including draft tables, and resets existing records and planet choices.
+The database is saved in `spacefarer.sqlite`. The demo data includes two planets,
+four departments, eight positions, and 20 spacefarers (10 per planet). Seeded
+spacefarers have their final skill values and do not trigger bonuses or emails.
+Running `npm run deploy:local` recreates the tables, including draft tables, and
+resets existing records and planet choices.
 
 ## Local users
 
