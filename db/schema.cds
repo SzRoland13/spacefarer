@@ -7,6 +7,12 @@ entity Planets : cuid, managed {
   description : String(500);
 }
 
+// Membership is private: only the current user's selection actions expose it.
+entity UserPlanets : managed {
+  key userId : String(255);
+  planet     : Association to Planets not null;
+}
+
 entity Departments : cuid, managed {
   name        : String(100) not null;
   description : String(500);
