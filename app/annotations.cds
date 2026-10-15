@@ -40,8 +40,10 @@ annotate SpacefarerService.Spacefarers with {
   firstName @title: 'First name' @mandatory;
   lastName @title: 'Last name' @mandatory;
   email @title: 'Email' @mandatory;
-  stardustCollection @title: 'Stardust collection';
-  wormholeNavigationSkill @title: 'Wormhole navigation skill';
+  stardustCollection @title: 'Stardust collection'
+    @Common.QuickInfo: 'New spacefarers receive 10 extra stardust when saved.';
+  wormholeNavigationSkill @title: 'Wormhole navigation skill'
+    @Common.QuickInfo: 'New spacefarers receive 5 extra skill points when saved, up to 100.';
   spacesuitColor @title: 'Spacesuit color';
   planet @(
     title: 'Planet',
@@ -87,5 +89,5 @@ annotate SpacefarerService.Departments with {
 annotate SpacefarerService.Positions with {
   ID @UI.Hidden @Common.Text: title;
   title @title: 'Position';
-  department_ID @UI.Hidden;
+  department @UI.Hidden;
 };
