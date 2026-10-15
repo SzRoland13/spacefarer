@@ -1,7 +1,9 @@
 import cds from "@sap/cds";
 import type { Request } from "@sap/cds";
+import { sendWelcomeEmail, type WelcomeCandidate } from "./welcome-email";
 
 const { SELECT, INSERT } = cds.ql;
+const log = cds.log("welcome-email");
 
 type SpacefarerAssignment = {
   department_ID?: string;
@@ -17,14 +19,20 @@ export default class SpacefarerService extends cds.ApplicationService {
       const planetID = req.user.attr.planet;
 
       if (!planetID) {
-        return req.reject(403, "Choose your planet before creating a spacefarer.");
+        return req.reject(
+          403,
+          "Choose your planet before creating a spacefarer.",
+        );
       }
 
       if (
         Object.hasOwn(req.data, "planet_ID") &&
         req.data.planet_ID !== planetID
       ) {
-        return req.reject(403, "Spacefarers must belong to your chosen planet.");
+        return req.reject(
+          403,
+          "Spacefarers must belong to your chosen planet.",
+        );
       }
 
       if (
@@ -53,10 +61,7 @@ export default class SpacefarerService extends cds.ApplicationService {
       const parent = path[0];
       const parentName = typeof parent === "string" ? parent : parent.id;
 
-      if (
-        parentName !== Spacefarers.name &&
-        parentName !== Drafts.name
-      ) {
+      if (parentName !== Spacefarers.name && parentName !== Drafts.name) {
         return;
       }
 
@@ -237,6 +242,64 @@ export default class SpacefarerService extends cds.ApplicationService {
           "The selected position must belong to the selected department.",
         );
       }
+    });
+
+    this.before("CREATE", Spacefarers, (req: Request) => {
+      const stardust =
+        req.data.stardustCollection === undefined
+          ? 0
+          : req.data.stardustCollection;
+      const skill =
+        req.data.wormholeNavigationSkill === undefined
+          ? 1
+          : req.data.wormholeNavigationSkill;
+
+      if (
+        !Number.isInteger(stardust) ||
+        stardust < 0 ||
+        stardust > 2147483637
+      ) {
+        return req.reject(
+          400,
+          "Starting stardust must be a whole number between 0 and 2147483637 to allow for the welcome bonus.",
+          "stardustCollection",
+        );
+      }
+
+      if (!Number.isInteger(skill) || skill < 1 || skill > 100) {
+        return req.reject(
+          400,
+          "Wormhole navigation skill must be a whole number between 1 and 100.",
+          "wormholeNavigationSkill",
+        );
+      }
+
+      if (
+        typeof req.data.email !== "string" ||
+        !/^[^\s@<>,;]+@[^\s@<>,;]+\.[^\s@<>,;]+$/.test(req.data.email)
+      ) {
+        return req.reject(400, "Enter a single valid email address.", "email");
+      }
+
+      req.data.stardustCollection = stardust + 10;
+      req.data.wormholeNavigationSkill = Math.min(skill + 5, 100);
+    });
+
+    this.after("CREATE", Spacefarers, (_result, req: Request) => {
+      // An after-handler still runs inside the transaction. Wait for its commit.
+      const welcome = { ...req.data } as WelcomeCandidate;
+
+      req.on("succeeded", async () => {
+        try {
+          await sendWelcomeEmail(welcome);
+        } catch (error) {
+          log.error(
+            "Could not send welcome email for spacefarer",
+            welcome.ID,
+            error,
+          );
+        }
+      });
     });
 
     return super.init();

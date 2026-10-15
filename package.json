@@ -1,5 +1,7 @@
 {
-  "workspaces": ["app/spacefarers"],
+  "workspaces": [
+    "app/spacefarers"
+  ],
   "scripts": {
     "start": "CDS_TYPESCRIPT=true node --import tsx node_modules/@sap/cds/bin/serve.js",
     "dev": "CDS_TYPESCRIPT=true NODE_OPTIONS='--import tsx' cds watch",
@@ -40,6 +42,7 @@
     "@cap-js/cds-types": "^0.18.0",
     "@sap/cds-dk": "^10.1.0",
     "@types/node": "^24.0.0",
+    "@types/nodemailer": "^8.0.2",
     "tsx": "^4",
     "typescript": "^7.0.0"
   },
@@ -49,7 +52,8 @@
   },
   "dependencies": {
     "@cap-js/sqlite": "^3.1.2",
-    "@sap/cds": "^10.1.1"
+    "@sap/cds": "^10.1.1",
+    "nodemailer": "^10.1.1"
   },
   "engines": {
     "node": ">=22"
