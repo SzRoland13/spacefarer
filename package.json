@@ -1,4 +1,36 @@
 {
+  "scripts": {
+    "start": "CDS_TYPESCRIPT=true node --import tsx node_modules/@sap/cds/bin/serve.js",
+    "dev": "CDS_TYPESCRIPT=true NODE_OPTIONS='--import tsx' cds watch",
+    "deploy:local": "cds deploy --to sqlite:spacefarer.sqlite",
+    "test": "node --import tsx --test test/*.test.cjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "cds": {
+    "requires": {
+      "[development]": {
+        "db": {
+          "kind": "sqlite",
+          "credentials": {
+            "url": "spacefarer.sqlite"
+          }
+        },
+        "auth": {
+          "kind": "basic",
+          "users": {
+            "alice": {
+              "password": "alice-local",
+              "roles": []
+            },
+            "bob": {
+              "password": "bob-local",
+              "roles": []
+            }
+          }
+        }
+      }
+    }
+  },
   "devDependencies": {
     "@cap-js/cds-typer": ">=0.1",
     "@cap-js/cds-types": "^0.18.0",
