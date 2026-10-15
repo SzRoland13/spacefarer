@@ -2,6 +2,7 @@ using { galactic as db } from '../db/schema';
 
 @requires: 'authenticated-user'
 service SpacefarerService {
+  @odata.draft.enabled
   @restrict: [{ grant: '*', to: 'planet-member', where: 'planet_ID = $user.planet' }]
   entity Spacefarers as projection on db.Spacefarers;
   @readonly

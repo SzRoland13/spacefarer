@@ -1,10 +1,14 @@
 {
+  "workspaces": ["app/spacefarers"],
   "scripts": {
     "start": "CDS_TYPESCRIPT=true node --import tsx node_modules/@sap/cds/bin/serve.js",
     "dev": "CDS_TYPESCRIPT=true NODE_OPTIONS='--import tsx' cds watch",
     "deploy:local": "cds deploy --to sqlite:spacefarer.sqlite",
     "test": "node --import tsx --test test/*.test.cjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "dev:ui": "npm start --workspace galactic-spacefarers-ui",
+    "build:ui": "npm run build --workspace galactic-spacefarers-ui",
+    "typecheck:ui": "npm run typecheck --workspace galactic-spacefarers-ui"
   },
   "cds": {
     "requires": {
